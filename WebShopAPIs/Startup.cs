@@ -9,9 +9,12 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 using Owin;
 using System.Web.Http;
+using System.Net.Http;
 using WebShopAPIs.Infrastructure;
 using Newtonsoft.Json.Serialization;
 using System.Net.Http.Formatting;
+using Newtonsoft.Json;
+
 namespace WebShopAPIs
 {
     public class Startup
@@ -44,8 +47,27 @@ namespace WebShopAPIs
         {
             config.MapHttpAttributeRoutes();
 
-            var jsonFormatter = config.Formatters.OfType<JsonMediaTypeFormatter>().First();
-            jsonFormatter.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+            //ConfigureCamelCase(config);
+
+            var json = GlobalConfiguration.Configuration.Formatters.JsonFormatter;
+            json.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+
+            //var jsonFormatter = config.Formatters.OfType<JsonMediaTypeFormatter>().First();
+            //jsonFormatter.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+        }
+
+        private void ConfigureCamelCase(HttpConfiguration config)
+        {
+            var jsonFormatter = config.Formatters.JsonFormatter;
+            // This next line is not required for it to work, but here for completeness - ignore data contracts.
+            jsonFormatter.UseDataContractJsonSerializer = false;
+            var settings = jsonFormatter.SerializerSettings;
+
+            // Pretty json for developers
+            settings.Formatting = Formatting.Indented;
+            //settings.Formatting = Formatting.None;
+
+            settings.ContractResolver = new CamelCasePropertyNamesContractResolver();
         }
     }
 }
