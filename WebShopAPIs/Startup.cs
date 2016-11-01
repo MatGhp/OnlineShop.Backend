@@ -47,6 +47,9 @@ namespace WebShopAPIs
         {
             config.MapHttpAttributeRoutes();
 
+            // Serialize with camelCase formatter for JSON.
+            var jsonFormatter = config.Formatters.OfType<JsonMediaTypeFormatter>().First();
+            jsonFormatter.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
             //ConfigureCamelCase(config);
 
             var json = GlobalConfiguration.Configuration.Formatters.JsonFormatter;

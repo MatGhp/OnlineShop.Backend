@@ -24,9 +24,16 @@ namespace WebShopAPIs.Controllers
             return db.Categories;
         }
 
+
+        // GET: api/Categories/5/Products
+        [Route("api/categories/{id}/products")]
+        public IQueryable<Product> GetCategoryProducts(int id)
+        {
+            return db.Products.Where(p => p.CategoryId == id);
+        }
         // GET: api/Categories/5
         [ResponseType(typeof(Category))]
-        public async Task<IHttpActionResult> GetCategory(string id)
+        public async Task<IHttpActionResult> GetCategory(int id)
         {
             Category category = await db.Categories.FindAsync(id);
             if (category == null)
@@ -104,7 +111,7 @@ namespace WebShopAPIs.Controllers
 
         // DELETE: api/Categories/5
         [ResponseType(typeof(Category))]
-        public async Task<IHttpActionResult> DeleteCategory(string id)
+        public async Task<IHttpActionResult> DeleteCategory(int id)
         {
             Category category = await db.Categories.FindAsync(id);
             if (category == null)
